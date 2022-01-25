@@ -16,7 +16,7 @@ CONTACTEMAIL = os.getenv("CONTACTEMAIL")
 CONTACTPASSWORD = os.getenv("CONTACTPASSWORD")
 current_hash = ""
 
-with open("/home/MehdiHayani/Schoolappnotifier/hash.txt", "r") as f:
+with open("hash.txt", "r") as f:
     current_hash = f.readline()
 
 
@@ -64,7 +64,7 @@ def main():
 
     if current_hash != latest_hash:
         send_email()
-        with open("/home/MehdiHayani/Schoolappnotifier/hash.txt", "w") as f:
+        with open("hash.txt", "w") as f:
             f.write(latest_hash)
             current_hash = latest_hash
     else:
