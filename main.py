@@ -69,8 +69,7 @@ def main():
             current_hash = latest_hash
     else:
         print("no update")
-        send_email(msg="nothing changed")
-    print("sleeping for 10 secs")
+    print("sleeping for 30 secs")
 
 
 schedule.every(30).seconds.do(main)
