@@ -28,7 +28,7 @@ def send_email(
         smtp.ehlo()
         smtp.starttls()
         smtp.ehlo()
-        subject = "SchooalApp changes detecter"
+        subject = "SchooalApp changes detector"
 
         smtp.login(CONTACTEMAIL, CONTACTPASSWORD)
         if msg == None:
@@ -57,7 +57,15 @@ def login(email, password):
 
 def main():
     global EMAIL, PASSWORD, current_hash
-    json_string = login(EMAIL, PASSWORD)
+    login_state = True
+    while login_state:
+        try:
+            json_string = login(EMAIL, PASSWORD)
+            login_state = False
+        except:
+            print("login failed")
+            sleep(2)
+
     print("starting")
     dict_string = json_string.replace("""\\""", "")[1:-1]
     latest_hash = hashlib.md5(dict_string.encode()).hexdigest()
