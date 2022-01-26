@@ -72,11 +72,10 @@ def main():
     print("sleeping for 60 secs")
 
 
-# send_email(msg="starting")
-# schedule.every(30).seconds.do(main)
+send_email(msg="starting")
+schedule.every(60).seconds.do(main)
 
-# while True:
-#     schedule.run_pending()
-#     sleep(5)
+while True:
+    schedule.run_pending()
+    sleep(55)
 
-main()
