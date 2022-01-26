@@ -68,6 +68,7 @@ def main():
             f.write(latest_hash)
             current_hash = latest_hash
     else:
+        print(current_hash)
         print("no update")
     print("sleeping for 60 secs")
 
