@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 import json
 import hashlib
@@ -12,9 +13,11 @@ from database import get_hashes, get_ref, update_hash, get_emails
 load_dotenv()
 
 EMAIL = os.getenv("EMAIL")
+EMAIL1A = os.getenv("EMAIL1A")
 EMAIL2A = os.getenv("EMAIL2A")
 EMAIL3A = os.getenv("EMAIL3A")
 EMAIL4A = os.getenv("EMAIL4A")
+PASSWORD1A = os.getenv("PASSWORD1A")
 PASSWORD2A = os.getenv("PASSWORD2A")
 PASSWORD3A = os.getenv("PASSWORD3A")
 PASSWORD4A = os.getenv("PASSWORD4A")
@@ -22,14 +25,14 @@ CONTACTEMAIL = os.getenv("CONTACTEMAIL")
 CONTACTPASSWORD = os.getenv("CONTACTPASSWORD")
 
 
-EMAILS = [EMAIL2A, EMAIL3A, EMAIL4A]
-PASSWORDS = [PASSWORD2A, PASSWORD3A, PASSWORD4A]
+EMAILS = [EMAIL1A, EMAIL2A, EMAIL3A, EMAIL4A]
+PASSWORDS = [PASSWORD1A, PASSWORD2A, PASSWORD3A, PASSWORD4A]
 
 ## SETTING THE HASHES
 
 REF = get_ref()
 HASHES = get_hashes(REF)
-starting_from = 2
+starting_from = 1
 
 
 def send_email(
@@ -101,7 +104,7 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
     print("sleeping for 60 secs")
 
 
-send_email(EMAIL, msg="starting")
+send_email(EMAIL, msg=f"starting {datetime.now()}")
 
 schedule.every(60).seconds.do(main)
 
