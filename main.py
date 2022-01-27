@@ -6,22 +6,34 @@ import smtplib
 import os
 from dotenv import load_dotenv
 import schedule
+from database import get_hashes, get_ref, update_hash, get_emails
 
-
+## LOADING ENV VAR
 load_dotenv()
 
 EMAIL = os.getenv("EMAIL")
-PASSWORD = os.getenv("PASSWORD")
+EMAIL2A = os.getenv("EMAIL2A")
+EMAIL3A = os.getenv("EMAIL3A")
+EMAIL4A = os.getenv("EMAIL4A")
+PASSWORD2A = os.getenv("PASSWORD2A")
+PASSWORD3A = os.getenv("PASSWORD3A")
+PASSWORD4A = os.getenv("PASSWORD4A")
 CONTACTEMAIL = os.getenv("CONTACTEMAIL")
 CONTACTPASSWORD = os.getenv("CONTACTPASSWORD")
-current_hash = ""
 
-with open("hash.txt", "r") as f:
-    current_hash = f.readline()
+
+EMAILS = [EMAIL2A, EMAIL3A, EMAIL4A]
+PASSWORDS = [PASSWORD2A, PASSWORD3A, PASSWORD4A]
+
+## SETTING THE HASHES
+
+REF = get_ref()
+HASHES = get_hashes(REF)
+starting_from = 2
 
 
 def send_email(
-    CONTACTEMAIL=CONTACTEMAIL, CONTACTPASSWORD=CONTACTPASSWORD, receiver=EMAIL, msg=None
+    receiver, CONTACTEMAIL=CONTACTEMAIL, CONTACTPASSWORD=CONTACTPASSWORD, msg=None
 ):
     t = time()
     with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
@@ -49,42 +61,51 @@ def login(email, password):
     res = s.post(
         "https://schoolapp-fetcher.vercel.app/api/_internal/check", json=payload
     )
-    # print(res.text)
     json_string = json.dumps(res.text, sort_keys=True, indent=4)
 
     return json_string
 
 
-def main():
-    global EMAIL, PASSWORD, current_hash
-    login_state = True
-    while login_state:
-        try:
-            json_string = login(EMAIL, PASSWORD)
-            login_state = False
-        except:
-            print("login failed")
-            sleep(2)
+def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
+    global HASHES
+    global starting_from
+    json_strings = []
+    for ind, email in enumerate(EMAILS):
+        login_state = True
+        while login_state:
+            try:
+                json_string = login(email, PASSWORDS[ind])
+                json_strings.append(json_string)
+                login_state = False
+            except:
+                print(f"login failed for {email}")
+                sleep(2)
 
-    print("starting")
-    dict_string = json_string.replace("""\\""", "")[1:-1]
-    latest_hash = hashlib.md5(dict_string.encode()).hexdigest()
+    print("logged in all accounts")
+    for ind, json_string in enumerate(json_strings):
+        year = f"{starting_from+ind}A"
+        dict_string = json_string.replace("""\\""", "")[1:-1]
+        latest_hash = hashlib.md5(dict_string.encode()).hexdigest()
 
-    if current_hash != latest_hash:
-        send_email()
-        with open("hash.txt", "w") as f:
-            f.write(latest_hash)
-            current_hash = latest_hash
-    else:
-        print(current_hash)
-        print("no update")
+        if HASHES[starting_from - 1 + ind] != latest_hash:
+            print(HASHES[ind], latest_hash)
+            update_hash(ref, latest_hash, year)
+            HASHES[ind] = latest_hash
+            receivers = get_emails(ref, year)
+            if receivers != None:
+                for receiver in receivers:
+                    send_email(receiver)
+                print(f"Email sent to {year}")
+        else:
+            print(f"no update for {year}")
     print("sleeping for 60 secs")
 
 
-send_email(msg="starting")
+send_email(EMAIL, msg="starting")
+
 schedule.every(60).seconds.do(main)
 
 while True:
     schedule.run_pending()
-    sleep(55)
+    sleep(60)
 
