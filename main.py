@@ -88,9 +88,9 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
         latest_hash = hashlib.md5(dict_string.encode()).hexdigest()
 
         if HASHES[starting_from - 1 + ind] != latest_hash:
-            print(HASHES[ind], latest_hash)
+            print(HASHES[starting_from - 1 + ind], latest_hash)
             update_hash(ref, latest_hash, year)
-            HASHES[ind] = latest_hash
+            HASHES[starting_from - 1 + ind] = latest_hash
             receivers = get_emails(ref, year)
             if receivers != None:
                 for receiver in receivers:
