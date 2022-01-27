@@ -97,7 +97,8 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
             receivers = get_emails(ref, year)
             if receivers != None:
                 for receiver in receivers:
-                    send_email(receiver)
+                    if receiver != None:
+                        send_email(receiver)
                 send_email(EMAIL, msg=f"Email sent to {year}")
                 print(f"Email sent to {year}")
         else:
