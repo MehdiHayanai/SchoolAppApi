@@ -39,9 +39,9 @@ def send_email(
 ref = get_ref()
 
 A1 = []
-A2 = []
+A2 = ["Dayssamelbejjaoui@gmail.com"]
 A3 = []
-A4 = ["Salma.kassimi@gmail.com"]
+A4 = []
 
 A = [A1, A2, A3, A4]
 
@@ -49,11 +49,11 @@ s = ["1A", "2A", "3A", "4A"]
 
 
 for i in range(4):
-    text_consi = f"This service tracks schoolapp's changes, you have been added to {s[i]} please activate your email notifications.\nNote that this program is only in the testing phase, please report any wrong behavior to 'Mehdi Hayani'.\n**Limitations:**\nthis program is not working yet for 'ratt'.\nwrong results for 'reserve'."
+    text_consi = f"This service tracks schoolapp's changes, you have been added to {s[i]} please activate your email notifications.\nNote that this program is only in the testing phase, please report any wrong behavior to '@Gadz'IT'.\n**Limitations:**\nthis program is not working yet for 'ratt'.\nwrong results for 'reserve'."
     for email in A[i]:
         send_email(email, msg=text_consi)
     print("text sent to{}".format(s[i]))
 
 
-update_emails(A4, "4A", ref)
+update_emails(A2, "2A", ref)
 

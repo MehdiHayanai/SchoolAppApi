@@ -98,7 +98,10 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
             if receivers != None:
                 for receiver in receivers:
                     if receiver != None:
-                        send_email(receiver)
+                        try:
+                            send_email(receiver)
+                        except:
+                            print(f"failed to send an email to {email}")
                 send_email(EMAIL, msg=f"Email sent to {year}")
                 print(f"Email sent to {year}")
         else:
