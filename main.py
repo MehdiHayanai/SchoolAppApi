@@ -23,6 +23,8 @@ PASSWORD3A = os.getenv("PASSWORD3A")
 PASSWORD4A = os.getenv("PASSWORD4A")
 CONTACTEMAIL = os.getenv("CONTACTEMAIL")
 CONTACTPASSWORD = os.getenv("CONTACTPASSWORD")
+CONTACTEMAIL1 = os.getenv("CONTACTEMAIL1")
+CONTACTPASSWORD1 = os.getenv("CONTACTPASSWORD1")
 
 
 EMAILS = [EMAIL1A, EMAIL2A, EMAIL3A, EMAIL4A]
@@ -47,7 +49,7 @@ def send_email(
 
         smtp.login(CONTACTEMAIL, CONTACTPASSWORD)
         if msg == None:
-            body = "something changed in SchooalApp."
+            body = "something changed in SchooalApp.\n\n\nif you notice any bad behavior please contact us at @Gadz'it"
         else:
             body = msg
         msg = "Subject : {}\n\n{}".format(subject, body)
@@ -99,7 +101,14 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
                 for receiver in receivers:
                     if receiver != None:
                         try:
-                            send_email(receiver)
+                            if year == "1A" or year == "2A":
+                                send_email(receiver)
+                            else:
+                                send_email(
+                                    receiver,
+                                    CONTACTEMAIL=CONTACTEMAIL1,
+                                    CONTACTPASSWORD=CONTACTPASSWORD1,
+                                )
                         except:
                             print(f"failed to send an email to {email}")
                 send_email(EMAIL, msg=f"Email sent to {year}")
