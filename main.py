@@ -132,17 +132,26 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
                     if receiver != None:
                         try:
                             if year == "1A" or year == "2A":
-                                send_yandex(receiver)
-                            else:
                                 send_email(receiver)
+                            else:
+                                send_email(
+                                    receiver,
+                                    CONTACTEMAIL=CONTACTEMAIL1,
+                                    CONTACTPASSWORD=CONTACTPASSWORD1,
+                                )
                         except:
                             print(f"failed to send an email to {email}")
 
                 if year == "1A" or year == "2A":
-                    send_yandex(EMAIL, msg=f"Email sent to {year}")
-                else:
                     send_email(
                         EMAIL, msg=f"Email sent to {year}",
+                    )
+                else:
+                    send_email(
+                        EMAIL,
+                        CONTACTEMAIL=CONTACTEMAIL1,
+                        CONTACTPASSWORD=CONTACTPASSWORD1,
+                        msg=f"Email sent to {year}",
                     )
 
                 print(f"Email sent to {year}")
