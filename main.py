@@ -131,7 +131,7 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
                 for receiver in receivers:
                     if receiver != None:
                         try:
-                            if year == "1A" or year == "2A":
+                            if year == "1A" or year == "4A":
                                 send_email(receiver)
                             else:
                                 send_email(
