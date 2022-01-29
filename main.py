@@ -28,6 +28,8 @@ CONTACTEMAIL1 = os.getenv("CONTACTEMAIL1")
 CONTACTPASSWORD1 = os.getenv("CONTACTPASSWORD1")
 CONTACTEMAIL2 = os.getenv("CONTACTEMAIL2")
 CONTACTPASSWORD2 = os.getenv("CONTACTPASSWORD2")
+CONTACTEMAIL3 = os.getenv("CONTACTEMAIL3")
+CONTACTPASSWORD3 = os.getenv("CONTACTPASSWORD3")
 
 
 EMAILS = [EMAIL1A, EMAIL2A, EMAIL3A, EMAIL4A]
@@ -62,31 +64,6 @@ def send_email(
         smtp.sendmail(CONTACTEMAIL, receiver, msg)
 
     print("email sent in {} sec".format(time() - t))
-
-
-def send_yandex(
-    receiver, CONTACTEMAIL=CONTACTEMAIL2, CONTACTPASSWORD=CONTACTPASSWORD2, msg=None
-):
-    with smtplib.SMTP("smtp.yandex.ru", 587, timeout=10) as smtp:
-        t = time()
-        try:
-            smtp.starttls()
-
-            subject = "SchooalApp changes detector"
-
-            smtp.login(CONTACTEMAIL, CONTACTPASSWORD)
-            if msg == None:
-                body = "something has changed in SchoolApp.\n\n\nNote : this program is in the testing phase if you notice any bad behavior, please contact us on contact@gadz.it"
-            else:
-                body = msg
-            msg = MIMEText(body)
-            msg["Subject"] = subject
-            msg["From"] = CONTACTEMAIL
-            msg["To"] = receiver
-            smtp.sendmail(CONTACTEMAIL, receiver, msg.as_string())
-
-        finally:
-            print("email sent in {} sec".format(time() - t))
 
 
 def login(email, password):
@@ -131,18 +108,30 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
                 for receiver in receivers:
                     if receiver != None:
                         try:
-                            if year == "1A" or year == "4A":
+                            if year == "1A":
                                 send_email(receiver)
-                            else:
+                            elif year == "4A":
+                                send_email(
+                                    receiver,
+                                    CONTACTEMAIL=CONTACTEMAIL3,
+                                    CONTACTPASSWORD=CONTACTPASSWORD3,
+                                )
+                            elif year == "2A":
                                 send_email(
                                     receiver,
                                     CONTACTEMAIL=CONTACTEMAIL1,
                                     CONTACTPASSWORD=CONTACTPASSWORD1,
                                 )
+                            else:
+                                send_email(
+                                    receiver,
+                                    CONTACTEMAIL=CONTACTEMAIL2,
+                                    CONTACTPASSWORD=CONTACTPASSWORD2,
+                                )
                         except:
                             print(f"failed to send an email to {email}")
 
-                if year == "1A" or year == "2A":
+                if year == "1A" or year == "4A":
                     send_email(
                         EMAIL, msg=f"Email sent to {year}",
                     )
