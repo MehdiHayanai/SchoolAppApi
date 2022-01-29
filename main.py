@@ -4,6 +4,7 @@ import json
 import hashlib
 from time import sleep, time
 import smtplib
+from email.mime.text import MIMEText
 import os
 from dotenv import load_dotenv
 import schedule
@@ -25,14 +26,18 @@ CONTACTEMAIL = os.getenv("CONTACTEMAIL")
 CONTACTPASSWORD = os.getenv("CONTACTPASSWORD")
 CONTACTEMAIL1 = os.getenv("CONTACTEMAIL1")
 CONTACTPASSWORD1 = os.getenv("CONTACTPASSWORD1")
+CONTACTEMAIL2 = os.getenv("CONTACTEMAIL2")
+CONTACTPASSWORD2 = os.getenv("CONTACTPASSWORD2")
 
 
 EMAILS = [EMAIL1A, EMAIL2A, EMAIL3A, EMAIL4A]
 PASSWORDS = [PASSWORD1A, PASSWORD2A, PASSWORD3A, PASSWORD4A]
 
-## SETTING THE HASHES
+# firebase ref
 
 REF = get_ref()
+## SETTING THE HASHES
+
 HASHES = get_hashes(REF)
 starting_from = 1
 
@@ -49,7 +54,7 @@ def send_email(
 
         smtp.login(CONTACTEMAIL, CONTACTPASSWORD)
         if msg == None:
-            body = "something changed in SchooalApp.\n\n\nif you notice any bad behavior please contact us at @Gadz'it"
+            body = "something has changed in SchoolApp.\n\n\nNote : this program is in the testing phase if you notice any bad behavior, please contact us on contact@gadz.it."
         else:
             body = msg
         msg = "Subject : {}\n\n{}".format(subject, body)
@@ -57,6 +62,31 @@ def send_email(
         smtp.sendmail(CONTACTEMAIL, receiver, msg)
 
     print("email sent in {} sec".format(time() - t))
+
+
+def send_yandex(
+    receiver, CONTACTEMAIL=CONTACTEMAIL2, CONTACTPASSWORD=CONTACTPASSWORD2, msg=None
+):
+    with smtplib.SMTP("smtp.yandex.ru", 587, timeout=10) as smtp:
+        t = time()
+        try:
+            smtp.starttls()
+
+            subject = "SchooalApp changes detector"
+
+            smtp.login(CONTACTEMAIL, CONTACTPASSWORD)
+            if msg == None:
+                body = "something has changed in SchoolApp.\n\n\nNote : this program is in the testing phase if you notice any bad behavior, please contact us on contact@gadz.it"
+            else:
+                body = msg
+            msg = MIMEText(body)
+            msg["Subject"] = subject
+            msg["From"] = CONTACTEMAIL
+            msg["To"] = receiver
+            smtp.sendmail(CONTACTEMAIL, receiver, msg.as_string())
+
+        finally:
+            print("email sent in {} sec".format(time() - t))
 
 
 def login(email, password):
@@ -102,24 +132,17 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
                     if receiver != None:
                         try:
                             if year == "1A" or year == "2A":
-                                send_email(receiver)
+                                send_yandex(receiver)
                             else:
-                                send_email(
-                                    receiver,
-                                    CONTACTEMAIL=CONTACTEMAIL1,
-                                    CONTACTPASSWORD=CONTACTPASSWORD1,
-                                )
+                                send_email(receiver)
                         except:
                             print(f"failed to send an email to {email}")
 
                 if year == "1A" or year == "2A":
-                    send_email(EMAIL, msg=f"Email sent to {year}")
+                    send_yandex(EMAIL, msg=f"Email sent to {year}")
                 else:
                     send_email(
-                        EMAIL,
-                        CONTACTEMAIL=CONTACTEMAIL1,
-                        CONTACTPASSWORD=CONTACTPASSWORD1,
-                        msg=f"Email sent to {year}",
+                        EMAIL, msg=f"Email sent to {year}",
                     )
 
                 print(f"Email sent to {year}")
