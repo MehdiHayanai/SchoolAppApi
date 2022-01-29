@@ -111,7 +111,17 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
                                 )
                         except:
                             print(f"failed to send an email to {email}")
-                send_email(EMAIL, msg=f"Email sent to {year}")
+
+                if year == "1A" or year == "2A":
+                    send_email(EMAIL, msg=f"Email sent to {year}")
+                else:
+                    send_email(
+                        EMAIL,
+                        CONTACTEMAIL=CONTACTEMAIL1,
+                        CONTACTPASSWORD=CONTACTPASSWORD1,
+                        msg=f"Email sent to {year}",
+                    )
+
                 print(f"Email sent to {year}")
         else:
             print(f"no update for {year}")
