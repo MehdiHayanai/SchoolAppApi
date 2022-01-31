@@ -104,12 +104,17 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
             update_hash(ref, latest_hash, year)
             HASHES[starting_from - 1 + ind] = latest_hash
             receivers = get_emails(ref, year)
+            sent = 0
             if receivers != None:
                 for receiver in receivers:
                     if receiver != None:
                         try:
                             if year == "1A":
-                                send_email(receiver)
+                                send_email(
+                                    receiver,
+                                    CONTACTEMAIL=CONTACTEMAIL2,
+                                    CONTACTPASSWORD=CONTACTPASSWORD2,
+                                )
                             elif year == "4A":
                                 send_email(
                                     receiver,
@@ -128,19 +133,20 @@ def main(EMAILS=EMAILS, PASSWORDS=PASSWORDS, ref=REF):
                                     CONTACTEMAIL=CONTACTEMAIL2,
                                     CONTACTPASSWORD=CONTACTPASSWORD2,
                                 )
+                            sent += 1
                         except:
-                            print(f"failed to send an email to {email}")
+                            print(f"failed to send an email to {receiver}")
 
                 if year == "1A" or year == "4A":
                     send_email(
-                        EMAIL, msg=f"Email sent to {year}",
+                        EMAIL, msg=f"Email sent to {year} {sent} of {len(receivers)}",
                     )
                 else:
                     send_email(
                         EMAIL,
                         CONTACTEMAIL=CONTACTEMAIL1,
                         CONTACTPASSWORD=CONTACTPASSWORD1,
-                        msg=f"Email sent to {year}",
+                        msg=f"Email sent to {year} {sent} of {len(receivers)}",
                     )
 
                 print(f"Email sent to {year}")
