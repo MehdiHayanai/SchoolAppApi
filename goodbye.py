@@ -6,8 +6,8 @@ import os
 from email.message import Message
 
 load_dotenv()
-CONTACTEMAIL = os.getenv("CONTACTEMAIL")
-CONTACTPASSWORD = os.getenv("CONTACTPASSWORD")
+CONTACTEMAIL = os.getenv("CONTACTEMAIL1")
+CONTACTPASSWORD = os.getenv("CONTACTPASSWORD1")
 
 
 def send_email(
