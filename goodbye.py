@@ -44,6 +44,8 @@ for i in ["1A", "2A", "3A", "4A"]:
         emails.append(email)
 url = "https://docs.google.com/forms/d/e/1FAIpQLSepxoCJVu8jhibM8N6IiwTLwQRTfZJ3B3zaQmMwwgrSg-WhGw/viewform?usp=sf_link"
 msg = f"Thank you for using School App Notifier, we hope our service was useful for you and we invite you to give us your feedback here {url}. \n\nUnfortunately our service is no longer available see you soon with a better version and good luck for your exames."
+emails = emails[64:]
 for email in emails:
-    send_email(email, msg=msg)
+    if email != None:
+        send_email(email, msg=msg)
 
