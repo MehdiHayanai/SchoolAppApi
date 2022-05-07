@@ -39,7 +39,7 @@ def send_email(
 ref = get_ref()
 
 A1 = []
-A2 = ["Dayssamelbejjaoui@gmail.com"]
+A2 = ["RANDOM@gmail.com"]
 A3 = []
 A4 = []
 
